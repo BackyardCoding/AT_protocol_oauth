@@ -16,8 +16,11 @@ export default function Feed() {
     useEffect(() => {
         async function fetchFeed() {
             try {
-                const response = await fetch("/api/feed");
-                const data = await response.json();
+                const response = await fetch("http://127.0.0.1:3001/api/feed", {
+                    credentials: "include",
+                });
+                const data = await response.json() as Post[] | { error: string };
+                if ("error" in data) throw new Error(data.error);
                 setPosts(data);
             } catch (err) {
                 setError("Failed to load feed");
@@ -25,7 +28,6 @@ export default function Feed() {
                 setLoading(false);
             }
         }
-
         fetchFeed();
     }, []);
 
@@ -45,8 +47,8 @@ export default function Feed() {
                     <p style={{ fontWeight: "bold", margin: "0 0 5px 0" }}>
                         👤 {post.displayName}
                         <span style={{ fontWeight: "normal", color: "#888", marginLeft: "8px" }}>
-              @{post.handle}
-            </span>
+                            @{post.handle}
+                        </span>
                     </p>
                     <p style={{ margin: "0 0 10px 0" }}>{post.text}</p>
                     <p style={{ margin: 0, color: "#888", fontSize: "0.9em" }}>

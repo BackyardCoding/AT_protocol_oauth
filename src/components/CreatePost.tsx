@@ -13,12 +13,13 @@ export default function CreatePost() {
         setError(null);
         setSuccess(false);
         try {
-            const response = await fetch("/api/post", {
+            const response = await fetch("http://127.0.0.1:3001/api/post", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify({ text }),
             });
-            const data = await response.json();
+            const data = await response.json() as { error?: string; uri?: string; cid?: string };
             if (data.error) throw new Error(data.error);
             setSuccess(true);
             setText("");
@@ -38,23 +39,23 @@ export default function CreatePost() {
                 borderRadius: "8px",
                 padding: "20px",
             }}>
-        <textarea
-            placeholder="What's on your mind?"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            maxLength={maxLength}
-            rows={4}
-            style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "6px",
-                border: "1px solid #ddd",
-                resize: "none",
-                fontFamily: "sans-serif",
-                fontSize: "1em",
-                boxSizing: "border-box",
-            }}
-        />
+                <textarea
+                    placeholder="What's on your mind?"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    maxLength={maxLength}
+                    rows={4}
+                    style={{
+                        width: "100%",
+                        padding: "10px",
+                        borderRadius: "6px",
+                        border: "1px solid #ddd",
+                        resize: "none",
+                        fontFamily: "sans-serif",
+                        fontSize: "1em",
+                        boxSizing: "border-box",
+                    }}
+                />
 
                 {/* Character counter */}
                 <p style={{

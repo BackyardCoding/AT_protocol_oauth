@@ -20,8 +20,10 @@ export default function Profile() {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`/api/profile?handle=${handle}`);
-            const data = await response.json();
+            const response = await fetch(`http://127.0.0.1:3001/api/profile?handle=${handle}`, {
+                credentials: "include",
+            });
+            const data = await response.json() as Profile & { error?: string };
             if (data.error) throw new Error(data.error);
             setProfile(data);
         } catch (err) {
@@ -33,9 +35,10 @@ export default function Profile() {
 
     async function handleFollow() {
         try {
-            await fetch("/api/follow", {
+            await fetch("http://127.0.0.1:3001/api/follow", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify({ handle }),
             });
             setFollowing(true);
@@ -46,9 +49,10 @@ export default function Profile() {
 
     async function handleUnfollow() {
         try {
-            await fetch("/api/unfollow", {
+            await fetch("http://127.0.0.1:3001/api/unfollow", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify({ handle }),
             });
             setFollowing(false);
@@ -96,15 +100,16 @@ export default function Profile() {
                     </div>
 
                     {/* Follow/Unfollow */}
-                    <button onClick={following ? handleUnfollow : handleFollow}
-                            style={{
-                                padding: "8px 16px",
-                                borderRadius: "6px",
-                                border: "none",
-                                background: following ? "#ff4444" : "#0085ff",
-                                color: "white",
-                                cursor: "pointer",
-                            }}>
+                    <button
+                        onClick={following ? handleUnfollow : handleFollow}
+                        style={{
+                            padding: "8px 16px",
+                            borderRadius: "6px",
+                            border: "none",
+                            background: following ? "#ff4444" : "#0085ff",
+                            color: "white",
+                            cursor: "pointer",
+                        }}>
                         {following ? "Unfollow" : "Follow"}
                     </button>
                 </div>
